@@ -5,8 +5,11 @@ import com.buyanne.pojo.vo.Result;
 import com.buyanne.service.UserService;
 import com.buyanne.utils.JwtUtil;
 import com.buyanne.utils.Md5Util;
+import com.buyanne.utils.ThreadLocalUtil;
 import jakarta.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,13 +56,46 @@ public class UserController {
     }
 
     @GetMapping("/userInfo")
-    public Result<User> userInfo(@RequestHeader(name = "Authorization") String token) {
-        String username = (String) JwtUtil.parseToken(token).get("username");
-        User user = userService.findUserByName(username);
-        if (user == null) {
-            return Result.errror("查找失败");
-        } else {
+    public Result<User> userInfo() {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        User user = userService.findUserByName((String) map.get("username"));
+        if (user != null) {
             return Result.success(user);
         }
+        return Result.errror("失败");
+    }
+
+    @PutMapping("/update")
+    public Result update(@RequestBody @Validated User user){
+        userService.update(user);
+        return Result.success();
+    }
+    @PatchMapping("/updateAvatar")
+    public Result updateAvatar(@RequestParam @URL String avatarUrl){
+        userService.updateAvatar(avatarUrl);
+
+        return Result.success();
+    }
+    @PatchMapping("/updatePassword")
+    public Result updatePassword(@RequestBody Map<String ,Object> params){
+        String oldPwd = (String) params.get("old_pwd");
+        String newPwd = (String) params.get("new_pwd");
+        String rePwd=(String)  params.get("re_pwd");
+
+        if(!StringUtils.hasLength(oldPwd)||!StringUtils.hasLength(newPwd)||!StringUtils.hasLength(rePwd)){
+            return Result.errror("缺少参数");
+        }
+
+        Map<String ,Object> map=ThreadLocalUtil.get();
+        String username = (String) map.get("username");
+        User user = userService.findUserByName(username);
+        if(!Md5Util.checkPassword(oldPwd,user.getPassword())) {
+            return Result.errror("密码错误");
+        }
+        if(!newPwd.equals(rePwd)){
+            return Result.errror("两次填写面不一致");
+        }
+        userService.updatePasword(newPwd);
+        return Result.success("密码更新成功");
     }
 }

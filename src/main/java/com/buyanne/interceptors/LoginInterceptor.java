@@ -1,6 +1,7 @@
 package com.buyanne.interceptors;
 
 import com.buyanne.utils.JwtUtil;
+import com.buyanne.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -17,10 +18,16 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         try {
             Map<String, Object> claims = JwtUtil.parseToken(token);
+            ThreadLocalUtil.set(claims);
             return true;
         } catch (Exception e) {
             response.setStatus(401);
             return false;
         }
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        ThreadLocalUtil.remove();
     }
 }
