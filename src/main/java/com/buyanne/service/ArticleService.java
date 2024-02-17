@@ -6,7 +6,7 @@ import com.buyanne.pojo.entity.PageBean;
 public interface ArticleService {
     void add(Article article);
 
-    PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, Integer state);
+    PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, String state);
 
     void update(Article article);
 

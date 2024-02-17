@@ -23,6 +23,6 @@ public class Result<T> {
     }
 
     public static <E> Result errror(E data) {
-        return new Result<>(0, "操作失败", data);
+        return new Result<>(1, "操作失败", data);
     }
 }

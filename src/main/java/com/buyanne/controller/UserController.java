@@ -56,7 +56,6 @@ public class UserController {
             String jwt = JwtUtil.genToken(map);
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
             operations.set(jwt,jwt,1, TimeUnit.HOURS);
-
             return Result.success(jwt);
         } else {
             return Result.errror("密码错误");

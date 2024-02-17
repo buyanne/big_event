@@ -29,7 +29,7 @@ public class ArticleController {
             Integer pageNum,
             Integer pageSize,
             @RequestParam(required = false) Integer categoryId,
-            @RequestParam(required = false) Integer state) {
+            @RequestParam(required = false) String state) {
         PageBean<Article> list = articleService.list(pageNum, pageSize, categoryId, state);
         return Result.success(list);
     }

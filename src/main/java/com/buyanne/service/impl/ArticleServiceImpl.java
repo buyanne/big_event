@@ -25,7 +25,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, Integer state) {
+    public PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
         PageBean<Article> pageBean = new PageBean<>();
 
         PageHelper.startPage(pageNum, pageSize);

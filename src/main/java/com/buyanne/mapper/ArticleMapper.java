@@ -13,7 +13,7 @@ public interface ArticleMapper {
             "values(#{title},#{content},#{coverImg},#{state},#{categoryId},#{createUser},#{createTime},#{updateTime})")
     void add(Article article);
 
-    List<Article> list(Integer categoryId, Integer state, Integer userId);
+    List<Article> list(Integer categoryId, String state, Integer userId);
 
     @Update("update article set title=#{title},content=#{content},cover_img=#{coverImg},state=#{state},category_id=#{categoryId} where id=#{id}")
     void update(Article article);
