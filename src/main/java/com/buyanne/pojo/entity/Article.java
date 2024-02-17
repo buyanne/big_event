@@ -19,8 +19,6 @@ public class Article {
     private String title;
     @NotEmpty
     private String content;
-    @NotEmpty
-    @URL
     private String coverImg;
     @State
     private String state;
